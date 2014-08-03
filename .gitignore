@@ -1,0 +1,15 @@
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
+local.properties
+*.iml
+*.iws
+.idea/
+.idea/copyright
+.idea/scopes
+out/
+gen/
+keystore.properties
