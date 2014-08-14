@@ -1,7 +1,5 @@
 package it.tiwiz.tdb;
 
-import android.content.Context;
-import android.content.Entity;
 import android.os.AsyncTask;
 import android.util.Log;
 
