@@ -10,6 +10,13 @@ import android.os.IBinder;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.List;
+
+import retrofit.RestAdapter;
+import retrofit.http.GET;
+import retrofit.http.Path;
+import retrofit.http.Query;
+
 
 public class WeatherActivity extends Activity {
 
@@ -17,8 +24,8 @@ public class WeatherActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
-        final String[] coords = new String[] { "52.52736", "13.40244"};
-        new AsyncRequest().execute(coords);
+        final String[] coords = new String[] {"52.52736", "13.40244"};
+        new AsyncRetrofit().execute(coords);
     }
 
     @Override
