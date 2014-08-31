@@ -21,5 +21,9 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+<<<<<<< HEAD
     compile 'com.squareup.retrofit:retrofit:1.6.1'
+=======
+    compile 'com.android.support:support-v4:20.0.+'
+>>>>>>> Lezione 3 - Troviamo la location dell'utente
 }
