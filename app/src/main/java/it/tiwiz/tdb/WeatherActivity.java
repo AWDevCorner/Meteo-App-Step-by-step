@@ -1,38 +1,18 @@
 package it.tiwiz.tdb;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-import java.util.List;
-
-import retrofit.RestAdapter;
-import retrofit.http.GET;
-import retrofit.http.Path;
-import retrofit.http.Query;
-
-=======
 import it.tiwiz.tdb.helpers.BackOps;
 import it.tiwiz.tdb.helpers.C;
->>>>>>> Lezione 3 - Troviamo la location dell'utente
-
-=======
-import it.tiwiz.tdb.helpers.BackOps;
-import it.tiwiz.tdb.helpers.C;
-
->>>>>>> Lezione 3 - Troviamo la location dell'utente
 
 public class WeatherActivity extends Activity implements View.OnClickListener{
     protected final ServiceReceiver mServiceReceiver = new ServiceReceiver();
@@ -43,18 +23,8 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
-<<<<<<< HEAD
-<<<<<<< HEAD
-        final String[] coords = new String[] {"52.52736", "13.40244"};
-        new AsyncRetrofit().execute(coords);
-=======
         findViewById(R.id.button).setOnClickListener(this);
         mTextView = (TextView) findViewById(R.id.textView);
->>>>>>> Lezione 3 - Troviamo la location dell'utente
-=======
-        findViewById(R.id.button).setOnClickListener(this);
-        mTextView = (TextView) findViewById(R.id.textView);
->>>>>>> Lezione 3 - Troviamo la location dell'utente
     }
 
     @Override
