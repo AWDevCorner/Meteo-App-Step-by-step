@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.TextView;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import java.util.List;
 
 import retrofit.RestAdapter;
@@ -27,6 +28,11 @@ import it.tiwiz.tdb.helpers.BackOps;
 import it.tiwiz.tdb.helpers.C;
 >>>>>>> Lezione 3 - Troviamo la location dell'utente
 
+=======
+import it.tiwiz.tdb.helpers.BackOps;
+import it.tiwiz.tdb.helpers.C;
+
+>>>>>>> Lezione 3 - Troviamo la location dell'utente
 
 public class WeatherActivity extends Activity implements View.OnClickListener{
     protected final ServiceReceiver mServiceReceiver = new ServiceReceiver();
@@ -38,8 +44,13 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
 <<<<<<< HEAD
+<<<<<<< HEAD
         final String[] coords = new String[] {"52.52736", "13.40244"};
         new AsyncRetrofit().execute(coords);
+=======
+        findViewById(R.id.button).setOnClickListener(this);
+        mTextView = (TextView) findViewById(R.id.textView);
+>>>>>>> Lezione 3 - Troviamo la location dell'utente
 =======
         findViewById(R.id.button).setOnClickListener(this);
         mTextView = (TextView) findViewById(R.id.textView);
