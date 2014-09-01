@@ -64,6 +64,8 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
         super.onStop();
         if (mServiceReceiver != null) {
             LocalBroadcastManager.getInstance(this).unregisterReceiver(mServiceReceiver);
+            Intent locationIntent = new Intent(this, BackOps.class);
+            stopService(locationIntent);
         }
     }
 
