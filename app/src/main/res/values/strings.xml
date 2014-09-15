@@ -5,4 +5,8 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
+    <string name="location_confirmation_dialog_title">Location</string>
+    <string name="location_confirmation_dialog_message">Location: %s</string>
+    <string name="location_confirmation_dialog_positive_button_label">Yes</string>
+    <string name="location_confirmation_dialog_negative_button_label">No</string>
 </resources>

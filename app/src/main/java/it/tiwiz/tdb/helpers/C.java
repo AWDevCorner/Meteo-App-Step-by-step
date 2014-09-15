@@ -8,4 +8,6 @@ public class C {
     private static final String LOCATION_PREFIX = ".location.broadcast";
     public static final String LOCATION_BROADCAST_ACTION = PREFIX + LOCATION_PREFIX + ".ACTION";
     public static final String LOCATION_BROADCAST_EXTRA = PREFIX + LOCATION_PREFIX + ".EXTRA";
+
+    public static final String LOCATION_CONFIRMATION_DIALOG_TAG = "LocationConfirmationDialog";
 }
