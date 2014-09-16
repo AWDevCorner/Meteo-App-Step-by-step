@@ -87,7 +87,7 @@ public class WeatherActivity extends Activity implements View.OnClickListener, G
     }
 
     @Override
-    public void onPositiveButtonCLick(DialogInterface dialog, String dialogTag) {
+    public void onPositiveButtonClick(DialogInterface dialog, String dialogTag) {
         dialog.dismiss();
     }
 

@@ -3,6 +3,7 @@ package it.tiwiz.tdb.dialogs;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 
 import it.tiwiz.tdb.R;
 

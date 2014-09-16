@@ -1,5 +1,6 @@
 package it.tiwiz.tdb.dialogs;
 
+import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -15,12 +16,26 @@ import android.os.Bundle;
 public class GenericDialog extends DialogFragment{
 
     public interface Callbacks {
-        public void onPositiveButtonCLick(DialogInterface dialog, String dialogTag);
+        public void onPositiveButtonClick(DialogInterface dialog, String dialogTag);
         public void onNegativeButtonClick(DialogInterface dialog, String dialogTag);
     }
 
+    private Callbacks mCallback;
+
     public GenericDialog() {
         //empty constructor needed for initialization
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        try {
+            mCallback = (Callbacks) activity;
+        }catch(ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement " + Callbacks.class.getSimpleName() + " interface!");
+
+        }
     }
 
     /**
@@ -37,31 +52,15 @@ public class GenericDialog extends DialogFragment{
         }
     }
 
-    private void onPositiveButtonClick() {
-        if (isValidContext()) {
-            ((Callbacks)getActivity()).onPositiveButtonCLick(getDialog(), getTag());
-        }
-    }
-
-    private void onNegativeButtonClick() {
-        if (isValidContext()) {
-            ((Callbacks)getActivity()).onNegativeButtonClick(getDialog(), getTag());
-        }
-    }
-
-    private boolean isValidContext() {
-        return (getActivity() != null && getActivity() instanceof Callbacks);
-    }
-
     private final DialogInterface.OnClickListener mButtonClickListener = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialogInterface, int which) {
             switch(which) {
                 case DialogInterface.BUTTON_POSITIVE:
-                    onPositiveButtonClick();
+                    mCallback.onPositiveButtonClick(dialogInterface, getTag());
                     break;
                 case DialogInterface.BUTTON_NEGATIVE:
-                    onNegativeButtonClick();
+                    mCallback.onNegativeButtonClick(dialogInterface, getTag());
                     break;
             }
         }
