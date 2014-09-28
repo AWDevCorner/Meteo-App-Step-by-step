@@ -19,8 +19,10 @@ import it.tiwiz.tdb.helpers.BackOps;
 import it.tiwiz.tdb.helpers.C;
 
 public class WeatherActivity extends Activity implements View.OnClickListener, GenericDialog.Callbacks{
-    protected final ServiceReceiver mServiceReceiver = new ServiceReceiver();
+    protected final LocationServiceReceiver mLocationServiceReceiver = new LocationServiceReceiver();
+    protected final WeatherUpdatesReceiver mWeatherUpdatesReceiver = new WeatherUpdatesReceiver();
     protected final IntentFilter mLocationFilter = new IntentFilter(C.LOCATION_BROADCAST_ACTION);
+    protected final IntentFilter mWeatherFilter = new IntentFilter(C.WEATHER_BROADCAST_ACTION);
     TextView mTextView;
 
     @Override
@@ -60,24 +62,36 @@ public class WeatherActivity extends Activity implements View.OnClickListener, G
     protected void onStart() {
         super.onStart();
         registerLocationReceiver();
+        registerWeatherReceiver();
         requestLocation();
     }
 
     private void registerLocationReceiver() {
-        LocalBroadcastManager.getInstance(this).registerReceiver(mServiceReceiver, mLocationFilter);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mLocationServiceReceiver, mLocationFilter);
+    }
+
+    private void registerWeatherReceiver() {
+        LocalBroadcastManager.getInstance(this).registerReceiver(mWeatherUpdatesReceiver, mWeatherFilter);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         unregisterLocationReceiver();
+        unregisterWeatherReceiver();
     }
 
     private void unregisterLocationReceiver() {
-        if (mServiceReceiver != null) {
-            LocalBroadcastManager.getInstance(this).unregisterReceiver(mServiceReceiver);
+        if (mLocationServiceReceiver != null) {
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(mLocationServiceReceiver);
             Intent locationIntent = new Intent(this, BackOps.class);
             stopService(locationIntent);
+        }
+    }
+
+    private void unregisterWeatherReceiver() {
+        if (mWeatherUpdatesReceiver != null) {
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(mWeatherUpdatesReceiver);
         }
     }
 
@@ -96,11 +110,18 @@ public class WeatherActivity extends Activity implements View.OnClickListener, G
         dialog.dismiss();
     }
 
-    private class ServiceReceiver extends BroadcastReceiver {
+    private class LocationServiceReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             final String location = intent.getStringExtra(C.LOCATION_BROADCAST_EXTRA);
             showLocationConfirmationDialog(location);
+        }
+    }
+
+    private class WeatherUpdatesReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
         }
     }
 

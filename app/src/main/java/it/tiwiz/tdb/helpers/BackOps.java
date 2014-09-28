@@ -7,12 +7,15 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+
+import it.tiwiz.tdb.interfaces.WeatherUpdates;
 
 
 /**
@@ -20,9 +23,10 @@ import java.util.Locale;
  * a service on a separate handler thread.
  * <p>
  */
-public class BackOps extends IntentService {
+public class BackOps extends IntentService implements WeatherUpdates{
     private static final String PREFIX = BackOps.class.getPackage().getName();
     public static final String GET_LOCATION = PREFIX + ".GET_LOCATION";
+    public static final String GET_WEATHER = PREFIX + ".GET_WEATHER";
 
     public BackOps() {
         super("BackOps");
@@ -34,6 +38,8 @@ public class BackOps extends IntentService {
         if (action != null) {
             if (action.equals(GET_LOCATION)) {
                 handleLocationRequest();
+            } else if (action.equals(GET_WEATHER)) {
+                handleWeatherRequest();
             }
         }
     }
@@ -55,6 +61,26 @@ public class BackOps extends IntentService {
                 .putExtra(C.LOCATION_BROADCAST_EXTRA, cityName);
         LocalBroadcastManager.getInstance(this).sendBroadcast(locationIntent);
 
+    }
+
+    protected void handleWeatherRequest() {
+        if (NetworkUtils.isOnline(this)) {
+            //we make the request to the server here
+        } else {
+            onWeatherFailure("");
+        }
+    }
+
+    @Override
+    public void onWeatherSuccess(String success) {
+
+    }
+
+    @Override
+    public void onWeatherFailure(String failure) {
+        Intent weatherResponseIntent = new Intent(C.WEATHER_BROADCAST_ACTION)
+                .putExtra(C.WEATHER_BROADCAST_RESULT, false);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(weatherResponseIntent);
     }
 
     protected static class LocationUtils {
@@ -97,6 +123,19 @@ public class BackOps extends IntentService {
             }
 
             return mostRecentLocation;
+        }
+    }
+
+    protected static class NetworkUtils {
+
+        public static boolean isOnline(Context context) {
+            ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo info = manager.getActiveNetworkInfo();
+            if (info != null) {
+                return info.isConnected();
+            } else {
+                return false;
+            }
         }
     }
 
