@@ -52,6 +52,10 @@ public class GenericDialog extends DialogFragment{
         }
     }
 
+    private boolean isValidContext() {
+        return (getActivity() != null && getActivity() instanceof Callbacks);
+    }
+
     private final DialogInterface.OnClickListener mButtonClickListener = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialogInterface, int which) {
