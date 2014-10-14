@@ -58,6 +58,13 @@ public class WeatherActivity extends Activity implements View.OnClickListener, G
         startService(locationIntent);
     }
 
+    private void requestWeatherForLocation(String city) {
+        Intent weatherIntent = new Intent(this, BackOps.class);
+        weatherIntent.setAction(BackOps.GET_WEATHER);
+        weatherIntent.putExtra(BackOps.GET_WEATHER_EXTRA, city);
+        startService(weatherIntent);
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -128,5 +135,6 @@ public class WeatherActivity extends Activity implements View.OnClickListener, G
     private void showLocationConfirmationDialog(String location) {
         LocationConfirmationDialog dialog = new LocationConfirmationDialog();
         dialog.setLocation(location).show(getFragmentManager(), C.LOCATION_CONFIRMATION_DIALOG_TAG);
+
     }
 }

@@ -9,12 +9,21 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.http.AndroidHttpClient;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import it.tiwiz.tdb.R;
 import it.tiwiz.tdb.interfaces.WeatherUpdates;
 
 
@@ -27,6 +36,8 @@ public class BackOps extends IntentService implements WeatherUpdates{
     private static final String PREFIX = BackOps.class.getPackage().getName();
     public static final String GET_LOCATION = PREFIX + ".GET_LOCATION";
     public static final String GET_WEATHER = PREFIX + ".GET_WEATHER";
+    public static final String GET_WEATHER_EXTRA = GET_WEATHER + ".EXTRA";
+    private AndroidHttpClient mHttpClient;
 
     public BackOps() {
         super("BackOps");
@@ -38,8 +49,8 @@ public class BackOps extends IntentService implements WeatherUpdates{
         if (action != null) {
             if (action.equals(GET_LOCATION)) {
                 handleLocationRequest();
-            } else if (action.equals(GET_WEATHER)) {
-                handleWeatherRequest();
+            } else if (action.equals(GET_WEATHER) && intent.hasExtra(GET_WEATHER_EXTRA)) {
+                handleWeatherRequest(intent.getStringExtra(GET_WEATHER_EXTRA));
             }
         }
     }
@@ -63,9 +74,9 @@ public class BackOps extends IntentService implements WeatherUpdates{
 
     }
 
-    protected void handleWeatherRequest() {
+    protected void handleWeatherRequest(String city) {
         if (NetworkUtils.isOnline(this)) {
-            //we make the request to the server here
+            makeWeatherRequestFor(city);
         } else {
             onWeatherFailure("");
         }
@@ -73,7 +84,7 @@ public class BackOps extends IntentService implements WeatherUpdates{
 
     @Override
     public void onWeatherSuccess(String success) {
-
+        Log.d("TEST", success);
     }
 
     @Override
@@ -83,6 +94,16 @@ public class BackOps extends IntentService implements WeatherUpdates{
         LocalBroadcastManager.getInstance(this).sendBroadcast(weatherResponseIntent);
     }
 
+    private void makeWeatherRequestFor(String city) {
+        final String urlRequest = getString(R.string.weather_request_url, city);
+        mHttpClient = AndroidHttpClient.newInstance("Android");
+        HttpGet getRequest = new HttpGet(urlRequest);
+        try {
+            mHttpClient.execute(getRequest, new WeatherResponseHandler());
+        } catch (IOException e) {
+            onWeatherFailure("");
+        }
+    }
     protected static class LocationUtils {
 
         public static String getCityFromLocation(Context context, Location location){
@@ -136,6 +157,15 @@ public class BackOps extends IntentService implements WeatherUpdates{
             } else {
                 return false;
             }
+        }
+    }
+
+    private final class WeatherResponseHandler implements ResponseHandler<Void>{
+        @Override
+        public Void handleResponse(HttpResponse httpResponse) throws ClientProtocolException, IOException {
+            mHttpClient.close();
+            onWeatherSuccess(EntityUtils.toString(httpResponse.getEntity()));
+            return null;
         }
     }
 
