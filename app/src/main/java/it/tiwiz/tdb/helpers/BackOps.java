@@ -18,6 +18,9 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.List;
@@ -84,7 +87,40 @@ public class BackOps extends IntentService implements WeatherUpdates{
 
     @Override
     public void onWeatherSuccess(String success) {
-        Log.d("TEST", success);
+        final WeatherData weatherData = parseJsonData(success);
+        Intent responseIntent = new Intent(C.WEATHER_BROADCAST_ACTION);
+        responseIntent.putExtra(C.WEATHER_BROADCAST_RESULT, weatherData);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(responseIntent);
+    }
+
+    private WeatherData parseJsonData(String jsonData) {
+        WeatherData.Builder builder = new WeatherData.Builder();
+
+        try {
+            JSONObject responseObject = new JSONObject(jsonData);
+            JSONObject weatherObject = responseObject.getJSONArray("weather").getJSONObject(0);
+            JSONObject mainObject = responseObject.getJSONObject("main");
+
+            String weatherMain = weatherObject.getString("main");
+            String weatherDescription = weatherObject.getString("description");
+            String weatherIconName = weatherObject.getString("icon");
+
+            double weatherTemperature = mainObject.getDouble("temp");
+            double weatherHumidity = mainObject.getDouble("humidity");
+
+            int iconRes = getResources().getIdentifier(String.format("ic_%s",weatherIconName), "drawable", getPackageName());
+
+            builder.setCondition(weatherMain)
+                    .setDescription(weatherDescription)
+                    .setIconRes(iconRes)
+                    .setTemperature(weatherTemperature)
+                    .setHumidity(weatherHumidity);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return builder.build();
     }
 
     @Override

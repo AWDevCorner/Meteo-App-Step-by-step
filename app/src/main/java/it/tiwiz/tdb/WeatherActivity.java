@@ -17,6 +17,7 @@ import it.tiwiz.tdb.dialogs.GenericDialog;
 import it.tiwiz.tdb.dialogs.LocationConfirmationDialog;
 import it.tiwiz.tdb.helpers.BackOps;
 import it.tiwiz.tdb.helpers.C;
+import it.tiwiz.tdb.helpers.WeatherData;
 
 public class WeatherActivity extends Activity implements View.OnClickListener, GenericDialog.Callbacks{
     protected final LocationServiceReceiver mLocationServiceReceiver = new LocationServiceReceiver();
@@ -128,13 +129,14 @@ public class WeatherActivity extends Activity implements View.OnClickListener, G
     private class WeatherUpdatesReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-
+            WeatherData weatherData = intent.getParcelableExtra(C.WEATHER_BROADCAST_RESULT);
+            mTextView.setText(weatherData.toString());
         }
     }
 
     private void showLocationConfirmationDialog(String location) {
         LocationConfirmationDialog dialog = new LocationConfirmationDialog();
         dialog.setLocation(location).show(getFragmentManager(), C.LOCATION_CONFIRMATION_DIALOG_TAG);
-
+        requestWeatherForLocation("Berlin");
     }
 }
